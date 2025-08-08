@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build step placeholder
+        run: echo "Running build... (replace with real build commands)"
+
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging
+        run: echo "Deploying to staging with key $STAGING_API_KEY"
+        env:
+          STAGING_API_KEY: ${{ secrets.STAGING_API_KEY }}
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production
+        run: echo "Deploying to production with key $PROD_API_KEY"
+        env:
+          PROD_API_KEY: ${{ secrets.PROD_API_KEY }}
